@@ -1,0 +1,144 @@
+<html>
+
+<head>
+<style type="text/css">
+#sumSleepDebt,
+#avgSleepTime,
+#sleepByDay {
+  width: 1100px;
+  height: 600px;
+}
+
+</style>
+</head>
+<script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
+
+<body>
+<h3>Overview</h3>
+<table>
+  <tr><td>Avg Sleep time:</td><td>$avgSleep</td></tr>
+  <tr><td>Total sleep debt:</td><td>$sleepDebt</td></tr>
+</table>
+<br/>
+<h3>Sleep time </h3>
+<h3>Sleep time </h3>
+
+<div id="sleepByDay"></div>
+
+<h3>Cumulative Sleep Debt</h3>
+
+<div id="sumSleepDebt"></div>
+
+</body>
+<script>
+
+YUI().use('charts', function(Y) {
+
+var sleepData = [
+  {% for currdate in dateKeys %}
+    { date: '{{currdate}}', minutes: '{{dateData[currdate].minutes}}', avgToDate: '{{dateData[currdate].avgToDate}}', sleepDebt: '{{dateData[currdate].sleepDebtToDate}}'},
+  {% endfor %}
+];
+var sleepData2 = sleepData;
+var stylesDef = {
+  axes: {
+    date: {
+      label: {
+        rotation: -50
+      }
+    }
+  },
+  series:{
+    minutes: {
+      marker:{
+        over: {
+          width: 8,
+          height:8 
+        },
+        width: 4,
+        height: 4,
+        color: "#00F",
+        fill: {
+          color: "#00F"
+        }
+      },
+      line:{
+        color: "#00F",
+        weight: 1
+      }
+    },
+    avgToDate: {
+      marker:{
+        over: {
+          width: 12,
+          height: 12
+        },
+        width: 2,
+        height: 2
+      },
+      line:{
+        color: "#0F0",
+        weight: 2
+      }
+    },
+  }
+
+};
+var sdStylesDef = {
+  axes: {
+    date: {
+      label: {
+        rotation: -50
+      }
+    }
+  },
+  series:{
+    sleepDebt:{
+      marker:{
+        width: 2,
+        height: 2
+      },
+      line:{
+        color: "#0F0",
+        weight: 3
+      }
+    }
+  }
+};
+var sleepDebtChart = new Y.Chart({dataProvider: sleepData2,
+                                  render: "#sumSleepDebt",
+                                  categoryKey: "date",
+                                  categoryType: "time",
+                                  seriesKeys: ["sleepDebt"],
+                                  styles: sdStylesDef});
+var sleepDataChart = new Y.Chart({dataProvider: sleepData,
+                                  render: "#sleepByDay",
+                                  categoryKey: "date",
+                                  categoryType: "time",
+                                  seriesKeys: ["minutes", "avgToDate"],
+                                  styles: stylesDef});
+
+
+var dataGraphic = sleepDataChart.get("graph").get("gridlines").get("graphic");
+var gWidth = dataGraphic.get("width");
+var gHeight = dataGraphic.get("height");
+var oldAutoDraw = dataGraphic.get("autoDraw");
+dataGraphic.set("autoDraw", true);
+
+var drawLineAt = function(hour, color) {
+  var xPos = gWidth;
+  var yPos = Math.round(gHeight * (1 - (hour*60/700)));
+  var shape = dataGraphic.addShape({
+      type: "path",
+      stroke: { color: color, weight: 3,}
+    });
+  shape.clear();
+  shape.moveTo(0, yPos);
+  shape.lineTo(xPos, yPos);
+  shape.end();
+};
+drawLineAt(8, "#F00");
+drawLineAt(7, "#F27C05");
+dataGraphic.set("autoDraw", oldAutoDraw);
+});
+</script>
