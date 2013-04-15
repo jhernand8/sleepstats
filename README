@@ -1,0 +1,13 @@
+Quick app to try out some more python and also uses/runs on Google app engine.
+
+I use Sleep Cycle app on the iPhone to record my sleep. You can export the data.
+I've created this app to give more info/stats from the data. With the export
+functionality in the app, one can email the data directly to this web app on
+Google app engine, which will parse and add the data, so that the next time one
+visits the page, it will have the data. Useful for viewing more stats for
+one's own sleep data only.
+To use this, you will need to open Google app engine account and upload the
+app.
+
+https://developers.google.com/appengine/docs/python/gettingstartedpython27/
+https://itunes.apple.com/us/app/sleep-cycle-alarm-clock/id320606217?mt=8
