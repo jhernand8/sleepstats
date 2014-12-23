@@ -132,21 +132,6 @@ var gWidth = dataGraphic.get("width");
 var gHeight = dataGraphic.get("height");
 var oldAutoDraw = dataGraphic.get("autoDraw");
 dataGraphic.set("autoDraw", true);
-
-var drawLineAt = function(hour, color) {
-  var xPos = gWidth;
-  var yPos = Math.round(gHeight * (1 - (hour*60/700)));
-  var shape = dataGraphic.addShape({
-      type: "path",
-      stroke: { color: color, weight: 3,}
-    });
-  shape.clear();
-  shape.moveTo(0, yPos);
-  shape.lineTo(xPos, yPos);
-  shape.end();
-};
-drawLineAt(8, "#F00");
-drawLineAt(7, "#F27C05");
 dataGraphic.set("autoDraw", oldAutoDraw);
 });
 </script>
