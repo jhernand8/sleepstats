@@ -27,9 +27,12 @@
 {{sevenByDay}} - {{fullByDay}} Minutes per night<br/>
 {{sevenByWeek}} - {{fullByWeek}} Minuters per week <br/>
 <br/><br/>
+<table>
+
 {% for sKey in summKeys %}
-  { {{sKey}}:  {{summData[sKey]}} <br/>}
+  <tr><td class="numDaysTd">{{sKey}}</td><td class="avgSleepTd">{{summData[sKey]}}</td></tr>
 {% endfor %}
+</table>
 <br/>
 <h3>Sleep time </h3>
 
