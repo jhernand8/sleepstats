@@ -20,7 +20,6 @@
 <a href="/?groupType=3">By Month</a><br/><br/>
 
 <table>
-  <tr><td>Avg Sleep time:</td><td>{{currentAvg}}</td></tr>
   <tr><td>Total sleep debt:</td><td>{{currentDebt}}</td></tr>
 </table>
 
@@ -28,6 +27,9 @@
 {{sevenByDay}} - {{fullByDay}} Minutes per night<br/>
 {{sevenByWeek}} - {{fullByWeek}} Minuters per week <br/>
 <br/><br/>
+{% for sKey in summKeys %}
+  { {{sKey}}:  {{summData[sKey]}} <br/>}
+{% endfor %}
 <br/>
 <h3>Sleep time </h3>
 

@@ -53,7 +53,6 @@ class MainPage(webapp2.RequestHandler):
     templateValues = {
       'test': "test aldsjasldj",
       'dateData': dataByDate,
-      'currentAvg': latestData.avgToDate,
       'currentDebt': latestData.sleepDebtToDate,
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
