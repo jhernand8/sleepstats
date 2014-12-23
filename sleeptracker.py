@@ -17,7 +17,7 @@ jinja_environment = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate'], verbose=True);
-
+AvgsForPrevDays = [1, 7, 14, 21, 30, 60, 90, 180, 365, 730];
 class GroupByType:
   DAY = 1
   WEEK = 2
@@ -53,10 +53,8 @@ class MainPage(webapp2.RequestHandler):
       'currentDebt': latestData.sleepDebtToDate,
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
-      'fullByMonth': (60*8*30.5),
       'sevenByDay': (60*7),
       'sevenByWeek': (60*7*7),
-      'sevenByMonth': (60*7*30.5),
       'dateKeys': sorted(dataByDate.keys())}
     self.response.out.write(template.render(templateValues))
 
@@ -83,7 +81,6 @@ class MainPage(webapp2.RequestHandler):
       nightDates.append(nightDate);
       debt = numNights * 8 *60 - sleepToDate;
 
-      logging.info("   " + str(nightDate) + ": " + str(debt) + ": " + str(sleepToDate) + ": " + str(numNights) + ": " + str(mins))
       avgsl = sleepToDate / numNights
       if groupByType == GroupByType.WEEK:
         avgsl= avgsl * 7;
