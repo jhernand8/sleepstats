@@ -23,9 +23,7 @@ class GroupByType:
   WEEK = 2
   MONTH = 3
 class MainPage(webapp2.RequestHandler):
-  def get(self):
-    user = users.get_current_user();
-
+  def parseGroupType(self):
     groupTypeStr = self.request.get("groupType")
     groupType = GroupByType.DAY;
     groupInt = 1;
@@ -35,6 +33,11 @@ class MainPage(webapp2.RequestHandler):
       groupType = GroupByType.WEEK
     if groupInt == GroupByType.MONTH:
       groupType = GroupByType.MONTH 
+    return groupType;
+
+  def get(self):
+    user = users.get_current_user();
+    groupType = self.parseGroupType();
     dataByDate = self.getDataByDate(groupType);
     latestData = None
     mostRecentDate = None;
@@ -45,6 +48,7 @@ class MainPage(webapp2.RequestHandler):
       elif dataDate > mostRecentDate:
         mostRecentDate = dataDate
         latestData = dataByDate[dataDate]
+    avgOverPeriods = self.computeSummData()
     template = jinja_environment.get_template('sleepDataTemplate.html');
     templateValues = {
       'test': "test aldsjasldj",
@@ -57,6 +61,14 @@ class MainPage(webapp2.RequestHandler):
       'sevenByWeek': (60*7*7),
       'dateKeys': sorted(dataByDate.keys())}
     self.response.out.write(template.render(templateValues))
+
+  # Computes some summary data such as average sleep over different periods
+  # putting them into a map and returning the map.
+  def computeSummData(self):
+    avgData = {}
+    dataByDate = self.getDataByDate(GroupByType.DAY);
+    return avgData;
+
 
   def getDataByDate(self, groupByType):
     query = sleepinstance.all();
