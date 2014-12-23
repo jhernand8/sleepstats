@@ -59,6 +59,8 @@ class MainPage(webapp2.RequestHandler):
       'fullByWeek': (60*8*7),
       'sevenByDay': (60*7),
       'sevenByWeek': (60*7*7),
+      'summData': avgOverPeriods,
+      'summKeys': sorted(avgOverPeriods.keys()),
       'dateKeys': sorted(dataByDate.keys())}
     self.response.out.write(template.render(templateValues))
 
@@ -67,6 +69,17 @@ class MainPage(webapp2.RequestHandler):
   def computeSummData(self):
     avgData = {}
     dataByDate = self.getDataByDate(GroupByType.DAY);
+    sortedDates = sorted(dataByDate.keys(), reverse=True)
+    dayCount = 0;
+    summSleep = 0
+    numDays = len(sortedDates)
+    for currDay in sortedDates:
+      dayCount += 1
+      dataForDay = dataByDate[currDay]
+      summSleep += dataForDay.minutes
+      if dayCount in AvgsForPrevDays or dayCount == numDays:
+        avgData[dayCount] = int(summSleep / dayCount)
+    
     return avgData;
 
 
