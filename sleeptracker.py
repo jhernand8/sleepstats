@@ -80,12 +80,22 @@ class MainPage(webapp2.RequestHandler):
         avgData[dayCount] = int(summSleep / dayCount)
     
     nowDate = date.today();
-    avgData["currYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year)
-    avgData["currMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year and x.month == nowDate.month)
     avgData["prevYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == (nowDate.year - 1))
-    prevMonth = nowDate - timedelta(months = 1)
+    avgData["currYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year)
+    # mostly works but not always, timedelta does not have a months feature
+    prevMonth = nowDate - timedelta(days = 30)
     avgData["prevMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == prevMonth.year and x.month == prevMonth.month)
-   
+    avgData["currMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year and x.month == nowDate.month)
+    prevSun = date.today()
+    for i in range(1, 8):
+      day = date.today - timedelta(days = i)
+      if day.weekday() == 6:
+        prevSun = day
+        break
+    avgData["currWeek"] = self.avgOverPeriod(dataByDate, lambda x: x >= prevSun)
+    
+    avgData["prevWeek"] = self.avgOverPeriod(dataByDate,
+        lamdba x: x < prevSun and (prevSun - timedelta(days = 7)) >= x)
     return avgData;
 
   # PeriodFN takes a date and returns true if the data for that date should be included
@@ -93,10 +103,10 @@ class MainPage(webapp2.RequestHandler):
   def avgOverPeriod(self, dataByDate, periodFn):
     dayCount = 0
     summSleep = 0
-    for day in dataByDates.keys():
+    for day in dataByDate.keys():
       if periodFn(day):
         dayCount += 1
-        summSleep += dataByDates[day].minutes
+        summSleep += dataByDate[day].minutes
     if summSleep == 0:
       return 0
     return summSleep / dayCount
