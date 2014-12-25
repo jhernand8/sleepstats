@@ -79,8 +79,27 @@ class MainPage(webapp2.RequestHandler):
       if dayCount in AvgsForPrevDays or dayCount == numDays:
         avgData[dayCount] = int(summSleep / dayCount)
     
+    nowDate = date.today();
+    avgData["currYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year)
+    avgData["currMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year and x.month == nowDate.month)
+    avgData["prevYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == (nowDate.year - 1))
+    prevMonth = nowDate - timedelta(months = 1)
+    avgData["prevMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == prevMonth.year and x.month == prevMonth.month)
+   
     return avgData;
 
+  # PeriodFN takes a date and returns true if the data for that date should be included
+  # to compute the average.
+  def avgOverPeriod(self, dataByDate, periodFn):
+    dayCount = 0
+    summSleep = 0
+    for day in dataByDates.keys():
+      if periodFn(day):
+        dayCount += 1
+        summSleep += dataByDates[day].minutes
+    if summSleep == 0:
+      return 0
+    return summSleep / dayCount
 
   def getDataByDate(self, groupByType):
     query = sleepinstance.all();
