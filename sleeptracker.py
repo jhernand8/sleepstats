@@ -78,6 +78,8 @@ class MainPage(webapp2.RequestHandler):
       summSleep += dataForDay.minutes
       if dayCount in AvgsForPrevDays or dayCount == numDays:
         avgData[dayCount] = int(summSleep / dayCount)
+        if dayCount == numDays:
+          avgData["AVG"] = int(summSleep/dayCount)
     
     nowDate = date.today();
     avgData["prevYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == (nowDate.year - 1))
@@ -88,7 +90,7 @@ class MainPage(webapp2.RequestHandler):
     avgData["currMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year and x.month == nowDate.month)
     prevSun = date.today()
     for i in range(1, 8):
-      day = date.today - timedelta(days = i)
+      day = date.today() - timedelta(days = i)
       if day.weekday() == 6:
         prevSun = day
         break

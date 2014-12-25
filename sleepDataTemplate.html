@@ -9,6 +9,10 @@
   height: 600px;
 }
 
+#aboveAvgTd {
+  color: #0000FF;
+}
+
 </style>
 </head>
 <script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
@@ -23,14 +27,15 @@
   <tr><td>Total sleep debt:</td><td>{{currentDebt}}</td></tr>
 </table>
 
-7-8 hours per day = <br/>
-{{sevenByDay}} - {{fullByDay}} Minutes per night<br/>
-{{sevenByWeek}} - {{fullByWeek}} Minuters per week <br/>
-<br/><br/>
+7-8 hours per day = {{sevenByDay}} - {{fullByDay}} per night = {{sevenByWeek}} - {{fullByWeek}} per week <br/>
+<br/>
 <table>
 
 {% for sKey in summKeys %}
-  <tr><td class="numDaysTd">{{sKey}}</td><td class="avgSleepTd">{{summData[sKey]}}</td></tr>
+  <tr><td class="numDaysTd">{{sKey}}</td>
+    <td class="avgSleepTd {% if summData["AVG"] < summData[sKey] %} aboveAvgTd {% endif %} ">
+    {{summData[sKey]}}</td>
+  </tr>
 {% endfor %}
 </table>
 <br/>
