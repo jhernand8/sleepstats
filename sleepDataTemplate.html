@@ -139,7 +139,11 @@ var sleepDataChart = new Y.Chart({dataProvider: sleepData,
                                   categoryKey: "date",
                                   categoryType: "time",
                                   seriesKeys: ["minutes", "avgToDate"],
-                                  styles: stylesDef});
+                                  styles: stylesDef,
+                                  axes: { 
+                                    leftTime: {
+                                      type: "numeric", position: "left", minimum: {% if isIndivDay %} 50 {% else %} 300 {% endif %}, keys: ["minutes", "avgToDate"]
+                                    }}});
 
 
 var dataGraphic = sleepDataChart.get("graph").get("gridlines").get("graphic");

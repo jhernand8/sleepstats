@@ -60,7 +60,8 @@ class MainPage(webapp2.RequestHandler):
       'sevenByWeek': (60*7*7),
       'summData': avgOverPeriods,
       'summKeys': sorted(avgOverPeriods.keys()),
-      'dateKeys': sorted(dataByDate.keys())}
+      'dateKeys': sorted(dataByDate.keys()),
+      'isIndivDay': (groupType == GroupByType.DAY)}
     self.response.out.write(template.render(templateValues))
 
   # Computes some summary data such as average sleep over different periods
