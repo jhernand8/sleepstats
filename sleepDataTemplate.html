@@ -9,8 +9,13 @@
   height: 600px;
 }
 
-#aboveAvgTd {
+.aboveAvgTd {
   color: #0000FF;
+  font-weight: bold;
+}
+.belowAvgTd {
+  color: #FF0000;
+  font-weight: bold;
 }
 
 </style>
@@ -33,7 +38,7 @@
 
 {% for sKey in summKeys %}
   <tr><td class="numDaysTd">{{sKey}}</td>
-    <td class="avgSleepTd {% if summData["AVG"] < summData[sKey] %} aboveAvgTd {% endif %} ">
+    <td class="avgSleepTd {% if summData["AVG"] < summData[sKey] %} aboveAvgTd {% elif summData["AVG"] > summData[sKey] %} belowAvgTd {% endif %} ">
     {{summData[sKey]}}</td>
   </tr>
 {% endfor %}
