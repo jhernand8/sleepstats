@@ -16,7 +16,7 @@ import logging
 jinja_environment = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate'], verbose=True);
+DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights'], verbose=True);
 AvgsForPrevDays = [1, 7, 14, 21, 30, 60, 90, 180, 365, 730];
 class GroupByType:
   DAY = 1
@@ -129,21 +129,28 @@ class MainPage(webapp2.RequestHandler):
         resdate = self.getMonthStart(resdate)
       sleepToDate = sleepToDate + result.minutes;
       mins = result.minutes;
+      nightsInGroup = 0;
       if resdate in dateToData:
         mins = mins + dateToData[resdate].minutes;
+        nightsInGroup = dateToData[resdate].numNights;
       if not nightDate in nightDates:
         numNights = numNights + 1;
+        nightsInGroup += 1
       nightDates.append(nightDate);
       debt = numNights * 8 *60 - sleepToDate;
 
       avgsl = sleepToDate / numNights
+      avgGroup = avgsl
       if groupByType == GroupByType.WEEK:
         avgsl= avgsl * 7;
       elif groupByType == GroupByType.MONTH:
         avgsl = avgsl * 30.5
       nightData = DataForDate(date = resdate,
                               minutes = mins,
+                              avgForGroup = int(mins / nightsInGroup),
                               avgToDate = int(avgsl),
+                              groupAvgToDate = int(avgGroup),
+                              numNights = nightsInGroup,
                               sleepDebtToDate = debt);
       dateToData[resdate] = nightData;
     return dateToData;

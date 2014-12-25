@@ -59,7 +59,7 @@ YUI().use('charts', function(Y) {
 
 var sleepData = [
   {% for currdate in dateKeys %}
-    { date: '{{currdate}}', minutes: '{{dateData[currdate].minutes}}', avgToDate: '{{dateData[currdate].avgToDate}}', sleepDebt: '{{dateData[currdate].sleepDebtToDate}}'},
+    { date: '{{currdate}}', minutes: '{{dateData[currdate].avgForGroup}}', avgToDate: '{{dateData[currdate].groupAvgToDate}}', sleepDebt: '{{dateData[currdate].sleepDebtToDate}}'},
   {% endfor %}
 ];
 var sleepData2 = sleepData;
