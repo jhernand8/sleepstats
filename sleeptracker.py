@@ -95,7 +95,7 @@ class MainPage(webapp2.RequestHandler):
     avgData["currWeek"] = self.avgOverPeriod(dataByDate, lambda x: x >= prevSun)
     
     avgData["prevWeek"] = self.avgOverPeriod(dataByDate,
-        lamdba x: x < prevSun and (prevSun - timedelta(days = 7)) >= x)
+        lambda x: x < prevSun and (prevSun - timedelta(days = 7)) >= x)
     return avgData;
 
   # PeriodFN takes a date and returns true if the data for that date should be included
