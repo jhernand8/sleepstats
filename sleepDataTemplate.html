@@ -28,6 +28,13 @@
   color: #FF0000;
 }
 
+.currPrevAvg {
+  font-size: 20px;
+}
+.currPrevAvg td {
+  padding-right: 20px;
+}
+
 </style>
 </head>
 <script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
@@ -47,24 +54,26 @@
 <table class="currPrevAvg"><tr class="header"><td></td><td>Week</td><td>Month</td><td>Year</td></tr>
   <tr class="current">
     <td>Current</td>
-    <td >{{summData['currWeek']}}</td>
-      class="{% if summData['currWeek'] < summData['prevWeek'] %}abovePrev{% elif summData['currWeek'] > summData['prevWeek']%}belowPrev{%endif%}"
-    <td >{{summData['currMonth']}}</td>
-      class="{% if summData['currMonth'] < summData['prevMonth'] %}abovePrev{% elif summData['currMonth'] > summData['prevMonth']%}belowPrev{%endif%}"
+    <td 
+      class="{% if summData['currWeek'] > summData['prevWeek'] %}abovePrev{% elif summData['currWeek'] < summData['prevWeek']%}belowPrev{%endif%}"
+      >{{summData['currWeek']}}</td>
+    <td 
+      class="{% if summData['currMonth'] > summData['prevMonth'] %}abovePrev{% elif summData['currMonth'] < summData['prevMonth']%}belowPrev{%endif%}"
+      >{{summData['currMonth']}}</td>
     <td
-      class="{% if summData['currYear'] < summData['prevYear'] %}abovePrev{% elif summData['currYear'] > summData['prevYear']%}belowPrev{%endif%}"
+      class="{% if summData['currYear'] > summData['prevYear'] %}abovePrev{% elif summData['currYear'] < summData['prevYear']%}belowPrev{%endif%}"
      >{{summData['currYear']}}</td>
   </tr>
   <tr class="previous">
     <td>Previous</td>
     <td 
-      class="{% if summData['prevWeek'] < summData['AVG'] %}prevAboveAvg{% elif summData['prevWeek'] > summData['AVG']%}prevBelowAvg{%endif%}"
+      class="{% if summData['prevWeek'] > summData['AVG'] %}prevAboveAvg{% elif summData['prevWeek'] < summData['AVG']%}prevBelowAvg{%endif%}"
       >{{summData['prevWeek']}}</td>
     <td 
-      class="{% if summData['prevMonth'] < summData['AVG'] %}prevAboveAvg{% elif summData['prevMonth'] > summData['AVG']%}prevBelowAvg{%endif%}"
+      class="{% if summData['prevMonth'] > summData['AVG'] %}prevAboveAvg{% elif summData['prevMonth'] < summData['AVG']%}prevBelowAvg{%endif%}"
       >{{summData['prevMonth']}}</td>
     <td 
-      class="{% if summData['prevYear'] < summData['AVG'] %}prevAboveAvg{% elif summData['prevYear'] > summData['AVG']%}prevBelowAvg{%endif%}"
+      class="{% if summData['prevYear'] > summData['AVG'] %}prevAboveAvg{% elif summData['prevYear'] < summData['AVG']%}prevBelowAvg{%endif%}"
       >{{summData['prevYear']}}</td>
   </tr>
 </table>
