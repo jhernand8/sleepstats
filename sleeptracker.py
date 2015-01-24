@@ -84,10 +84,13 @@ class MainPage(webapp2.RequestHandler):
     
     nowDate = date.today();
     avgData["prevYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == (nowDate.year - 1))
+    logging.info("curryear");
     avgData["currYear"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year)
     # mostly works but not always, timedelta does not have a months feature
     prevMonth = nowDate - timedelta(days = 30)
+    logging.info("prevmonth");
     avgData["prevMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == prevMonth.year and x.month == prevMonth.month)
+    logging.info("currmonth");
     avgData["currMonth"] = self.avgOverPeriod(dataByDate, lambda x: x.year == nowDate.year and x.month == nowDate.month)
     prevSun = date.today()
     for i in range(1, 8):
@@ -95,8 +98,10 @@ class MainPage(webapp2.RequestHandler):
       if day.weekday() == 6:
         prevSun = day
         break
+    logging.info("currWeek");
     avgData["currWeek"] = self.avgOverPeriod(dataByDate, lambda x: x >= prevSun)
     
+    logging.info("prevWeek");
     avgData["prevWeek"] = self.avgOverPeriod(dataByDate,
         lambda x: x < prevSun and (prevSun - timedelta(days = 7)) >= x)
     return avgData;
@@ -110,8 +115,10 @@ class MainPage(webapp2.RequestHandler):
       if periodFn(day):
         dayCount += 1
         summSleep += dataByDate[day].minutes
+        logging.info(str(day) + ": " + str(dataByDate[day].minutes) + ": " + str(summSleep));
     if summSleep == 0:
       return 0
+    logging.info("total: " + str(dayCount) + ": " + str(summSleep) + ": " + str(summSleep/dayCount));
     return summSleep / dayCount
 
   def getDataByDate(self, groupByType):
