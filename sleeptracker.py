@@ -178,6 +178,6 @@ class MainPage(webapp2.RequestHandler):
   def getMonthStart(self, origDate):
     return origDate.replace(day=1);
   def getYearStart(self, origDate):
-    return origDate.replace(day=1).replace(month=1;
+    return origDate.replace(day=1).replace(month=1);
 app = webapp2.WSGIApplication([('/', MainPage)],
                               debug=True)
