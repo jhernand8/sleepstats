@@ -22,6 +22,7 @@ class GroupByType:
   DAY = 1
   WEEK = 2
   MONTH = 3
+  YEAR = 4
 class MainPage(webapp2.RequestHandler):
   def parseGroupType(self):
     groupTypeStr = self.request.get("groupType")
@@ -33,6 +34,8 @@ class MainPage(webapp2.RequestHandler):
       groupType = GroupByType.WEEK
     if groupInt == GroupByType.MONTH:
       groupType = GroupByType.MONTH 
+    if groupInt == GroupByType.YEAR:
+      groupType = GroupByType.YEAR
     return groupType;
 
   def get(self):
@@ -129,6 +132,8 @@ class MainPage(webapp2.RequestHandler):
         resdate = self.getWeekStart(resdate)
       if groupByType == GroupByType.MONTH:
         resdate = self.getMonthStart(resdate)
+      if groupByType == GroupByType.YEAR:
+        resdate = self.getYearStart(resdate)
       sleepToDate = sleepToDate + result.minutes;
       mins = result.minutes;
       nightsInGroup = 0;
@@ -147,6 +152,8 @@ class MainPage(webapp2.RequestHandler):
         avgsl= avgsl * 7;
       elif groupByType == GroupByType.MONTH:
         avgsl = avgsl * 30.5
+      elif groupByType == GroupByType.YEAR:
+        avgsl = avgsl * 365
       nightData = DataForDate(date = resdate,
                               minutes = mins,
                               avgForGroup = int(mins / nightsInGroup),
@@ -170,5 +177,7 @@ class MainPage(webapp2.RequestHandler):
 
   def getMonthStart(self, origDate):
     return origDate.replace(day=1);
+  def getYearStart(self, origDate):
+    return origDate.replace(day=1).replace(month=1;
 app = webapp2.WSGIApplication([('/', MainPage)],
                               debug=True)
