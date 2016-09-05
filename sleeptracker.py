@@ -129,11 +129,11 @@ class MainPage(webapp2.RequestHandler):
       resdate = self.getDateForStart(result.starttime);
       nightDate = date(day=resdate.day, month=resdate.month, year=resdate.year);
       if groupByType == GroupByType.WEEK:
-        resdate = self.getWeekStart(resdate)
+        resdate = self.getWeekMid(resdate)
       if groupByType == GroupByType.MONTH:
-        resdate = self.getMonthStart(resdate)
+        resdate = self.getMonthMid(resdate)
       if groupByType == GroupByType.YEAR:
-        resdate = self.getYearStart(resdate)
+        resdate = self.getYearMid(resdate)
       sleepToDate = sleepToDate + result.minutes;
       mins = result.minutes;
       nightsInGroup = 0;
@@ -170,14 +170,14 @@ class MainPage(webapp2.RequestHandler):
       sDate = sDate - timedelta(days = 1);
     return sDate;
 
-  def getWeekStart(self, origDate):
+  def getWeekMid(self, origDate):
     origWeekday = origDate.weekday()
-    weekStart = origDate - timedelta(days = origWeekday)
+    weekStart = origDate - timedelta(days = origWeekday) + timedelta(3)
     return weekStart
 
-  def getMonthStart(self, origDate):
-    return origDate.replace(day=2);
-  def getYearStart(self, origDate):
-    return origDate.replace(day=2).replace(month=1);
+  def getMonthMid(self, origDate):
+    return origDate.replace(day=15);
+  def getYearMid(self, origDate):
+    return origDate.replace(day=2).replace(month=7);
 app = webapp2.WSGIApplication([('/', MainPage)],
                               debug=True)
