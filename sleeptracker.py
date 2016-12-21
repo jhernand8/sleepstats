@@ -103,6 +103,9 @@ class MainPage(webapp2.RequestHandler):
     prevPrevSun = prevSun - timedelta(days = 7);
     avgData["prevWeek"] = self.avgOverPeriod(dataByDate,
         lambda x: x < prevSun and prevPrevSun <= x)
+    avgData["avg"] = summSleep / dayCount;
+    avgData["minToNext"] = int((int(summSleep / dayCount) + 1) * dayCount - summSleep);
+    avgData["minToNextMonth"] = int((int(summSleep / dayCount) + 1) * (dayCount + 30) - summSleep - (summSleep / dayCount * 30));
     return avgData;
 
   # PeriodFN takes a date and returns true if the data for that date should be included
