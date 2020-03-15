@@ -35,6 +35,9 @@
 .currPrevAvg td {
   padding-right: 20px;
 }
+#avgSleepInPastNumDays {
+  font-size: 20px;
+}
 
 </style>
 </head>
@@ -79,8 +82,8 @@
       >{{summData['prevYear']}}</td>
   </tr>
 </table>
-<table>
-
+<br/><br/>
+<table id="avgSleepInPastNumDays">
 {% for sKey in summKeys %}
   {% if sKey in ['currMonth', 'currWeek', 'currYear', 'prevMonth', 'prevWeek', 'prevYear', 'avg', 'minToNext'] %}
   {% else %}
