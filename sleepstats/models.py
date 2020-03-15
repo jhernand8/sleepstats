@@ -1,7 +1,6 @@
-import datetime
-from google.appengine.ext import db
+from django.db import models
 
-class sleepinstance(db.Model):
+class SleepInstance(models.Model):
   starttime = db.DateTimeProperty(required=True)
   endtime = db.DateTimeProperty(required=True)
   minutes = db.IntegerProperty(required=True)

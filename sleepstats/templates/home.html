@@ -1,0 +1,496 @@
+<html>
+<head>
+  <style>
+   table {
+     border: 1px solid black;
+     border-collapse: collapse;
+   }
+   td, th {
+     border: 1px solid black;
+     border-collapse: collapse;
+     padding-left: 10px;
+     padding-right: 10px;
+   }
+   /* https://stackoverflow.com/questions/27525228/react-click-events-not-firing-on-mobile */
+   table tr#gamesHeaderRow th {
+     cursor: pointer;
+   }
+   #search, #search input {
+     font-size: 25px;
+   }
+   #mondays, #fridays, #saturdays, #sundays, #tuesdays, #wednesdays, #thursdays {
+     float: left;
+     padding: 20px;
+   }
+
+   #byDate {
+     height: 200px;
+     overflow: scroll;
+   }
+
+   #byDate span.play {
+     display: inline-block;
+     min-width: 80px;
+   }
+
+   span.dateOptSpan {
+     white-space: nowrap;
+   }
+   span.dateOptSpan input {
+     width: 120px;
+   }
+  </style>
+  <script src="https://fb.me/react-0.13.0.js"></script>
+  <script src="https://fb.me/JSXTransformer-0.13.0.js"></script>
+<script type="text/jsx">
+/** @jsx React.DOM */
+var allGames = {{ allGames}};
+var byDate = {{ byDate }};
+// sort functions for sorting the game entries.
+var RANK_SORT = function(a, b) { return a.ranking - b.ranking;};
+var RATING_SORT = function(a, b) { return b.rating - a.rating;};
+var NUM_RATINGS_SORT = function(a, b) { return b.numRatings - a.numRatings;};
+var COMPLEXITY_SORT = function(a, b) { return a.complexity - b.complexity;};
+var PLAYTIME_SORT = function(a, b) { return a.playTime - b.playTime;};
+var NUM_PLAYS_SORT = function(a, b) { return b.numPlays - a.numPlays;};
+var LAST_PLAYED_SORT = function(a, b) { 
+  if (a.lastPlayed == null || a.lastPlayed == undefined) {
+    if (b.lastPlayed != null && b.lastPlayed != undefined) {
+      return 1;
+    }
+    if (b.lastPlayed == null || b.lastPlayed == undefined) {
+      return 0;
+    }
+  }
+  if (b.lastPlayed == null || b.lastPlayed == undefined) {
+    return -1;
+  }
+  return new Date(b.lastPlayed) - new Date(a.lastPlayed);
+};
+var SingleGame = React.createClass({
+  render: function() {
+    var url = "https://www.boardgamegeek.com" + this.props.game.bggUrl;
+    var aHref = <a href={url}>{this.props.game.name}</a>;
+    var numPlays = this.props.game.numPlays == 0 ? "" : this.props.game.numPlays;
+    return <tr>
+
+        <td>{this.props.game.ranking}</td>
+        <td>{aHref}</td>
+        <td>{this.props.game.rating}</td>
+        <td>{this.props.game.complexity}</td>
+        <td>{this.props.game.playTime} mins</td>
+        <td>{this.props.game.numRatings}</td>
+        <td>{this.props.game.minNumPlayers} - {this.props.game.maxNumPlayers}</td>
+        <td>{this.props.game.lastPlayed}</td>
+        <td>{numPlays}</td>
+        <td><RecordPlay key={this.props.game.bggId} gameId={this.props.game.bggId} offset="0" csrf={this.props.csrf}/></td>
+      </tr>;
+  }
+});
+
+var RecordPlay = React.createClass({
+
+  render: function() {
+    var dates = [];
+
+    var today = new Date();
+    dates.push(<option value=""></option>);
+    for (var i = 0; i >= -30; i--) {
+      var currDate = new Date(today);
+      currDate.setDate(currDate.getDate() + i);
+      var dateStr = (currDate.getMonth() + 1) + "/" + currDate.getDate() + "/" + currDate.getFullYear();
+      var opt = <option key={dateStr} value={dateStr}>{dateStr}</option>;
+      dates.push(opt);
+    }
+    var sel = <select onChange={this.handleDateChange}>{dates}</select>;
+
+    var sendBtn = <button className="sendBtn" onClick={this.handleSendClick}>Save</button>;
+    return <span className="dateOptSpan">{sel}{sendBtn}<input type="text" name="notes" onChange={this.onNotesChange}/></span>;
+
+  },
+  onNotesChange: function(e) {
+    this.setState({ notes: e.target.value});
+  },
+
+  // Handles change of select option.
+  handleDateChange: function(e) {
+    this.setState({ dateSelected: e.target.value});
+  },
+  // Sends the play date to the backend to be saved.
+  handleSendClick: function(e) {
+    var self = this;
+    var url = "/savePlay?csrfmiddlewaretoken=" + this.props.csrf;
+    fetch(url, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': this.props.csrf
+        },
+        body: JSON.stringify({gameId: self.props.gameId, date: self.state.dateSelected, notes: self.state.notes}) 
+      })
+    .then(res => console.log(res));
+  }
+
+});
+
+var Home = React.createClass({
+  getInitialState: function() {
+    return { sortFn: RANK_SORT,
+             numPlayersFilterNum: 0,
+             games: this.props.allGames.sort(RANK_SORT),
+             maxTime: 0 };
+  },
+  render: function() {
+      var gameRows = [];
+      //var filteredGames = this.filterGames(this.props.allGames);
+      var sortedGames = this.state.games;
+      for (var i = 0; i < sortedGames.length; i++) {
+
+        var game = <SingleGame game={sortedGames[i]} key={sortedGames[i].bggId} csrf={this.props.csrf}/>
+        gameRows.push(game);
+        if (i > 500) {
+          break;
+        }
+      }
+
+      var search = <div key="search" id="search">Search <input type="text" onKeyUp={this.searchKeyUp}/></div>
+      return <div id="homeDiv">{search}<br/>{this.formNumPlayersFilter()}<br/><br/>
+        {this.formTimeFilter()}<br/><br/>
+        {this.formComplexityFilter()}<br/><br/>
+        {this.formPlayedFilter()}<br/><br/>
+        <table id="gamesTable" key="gamesTable"><tbody>
+        <tr key="headerRow" id="gamesHeaderRow">
+          <th key="rank" onClick={this.formChangeSortFn(RANK_SORT)} >Ranking</th>
+          <th key="name" >Name</th>
+          <th key="rating" onClick={this.formChangeSortFn(RATING_SORT)}>Rating</th>
+          <th key="complexity" onClick={this.formChangeSortFn(COMPLEXITY_SORT)} >Complexity</th>
+          <th key="time" onClick={this.formChangeSortFn(PLAYTIME_SORT)}>Play Time</th>
+          <th key="numRate" onClick={this.formChangeSortFn(NUM_RATINGS_SORT)} ># Ratings</th>
+          <th key="numPlayers" ># Players</th>
+          <th key="datePlayed" onClick={this.formChangeSortFn(LAST_PLAYED_SORT)} >Last played</th>
+          <th key="playCount" onClick={this.formChangeSortFn(NUM_PLAYS_SORT)}># Plays</th>
+          <th key="empty"></th>
+        </tr>
+       { gameRows}
+       </tbody>
+      </table>
+      </div>;
+  },
+
+  // forms the filter for time of the games
+  formTimeFilter: function() {
+
+    return <div id="timeFilterDiv" key="timeFilter">Max Length: <input key="timeFilter" type="number" onBlur={this.timeFilterOnBlur}/></div>;
+
+  },
+
+  // Forms the filter inputs to filter games by their complexity rating.
+  formComplexityFilter: function() {
+
+    return <div key="complexFilter">Complexity: 
+      <input type="text" key="minComplex" id="minComplex" onBlur={this.minComplexityBlur}/>
+      to 
+      <input type="text" key="maxComplex" id="maxComplex" onBlur={this.maxComplexityBlur}/>
+      </div>;
+
+  },
+
+  // Forms filter to filter for games that have played.
+  formPlayedFilter: function() {
+    return <div key="playedFilter">Played: 
+        <input type="checkbox" key="playedBefore" id="playedBefore" onChange={this.onPlayedChange} onClick={this.onPlayedChange}/>
+      </div>;
+
+  },
+
+  // Handler for when played checkbox changes.
+  onPlayedChange: function(e) {
+    var isSelected = e.target.checked;
+    var games = 
+      this.filterGames(this.props.allGames,
+                       this.searchKeyword,
+                       this.state.numPlayersFilterNum,
+                       this.state.maxTime,
+                       this.state.minComplexity,
+                       this.state.maxComplexity,
+                       isSelected);
+    this.setState({ playedOnly: isSelected, games: games});
+  },
+
+  // Handler for blur of the max complexity input.
+  maxComplexityBlur: function(e) {
+    var val = parseFloat(e.target.value) || 0;
+
+    var filteredGames =
+      this.filterGames(this.props.allGames,
+                       this.searchKeyword,
+                       this.state.numPlayersFilterNum,
+                       this.state.maxTime,
+                       this.state.minComplexity,
+                       val,
+                       this.state.playedOnly);
+    this.setState({ maxComplexity: val, games: filteredGames});
+
+  },
+  
+  // Handler for blur of the min complexity input.
+  minComplexityBlur: function(e) {
+    var val = parseFloat(e.target.value) || 0;
+
+    var filteredGames =
+      this.filterGames(this.props.allGames,
+                       this.searchKeyword,
+                       this.state.numPlayersFilterNum,
+                       this.state.maxTime,
+                       val,
+                       this.state.maxComplexity,
+                       this.state.playedOnly);
+    this.setState({ minComplexity: val, games: filteredGames});
+
+  },
+
+
+  // When the time filter field is unfocused, filter based on input time.
+  timeFilterOnBlur: function(e) {
+    var time = parseInt(e.target.value) || 0;
+    var filteredGames = 
+      this.filterGames(this.props.allGames,
+                       this.searchKeyword,
+                       this.state.numPlayersFilterNum,
+                       time,
+                       this.state.minComplexity, this.state.maxComplexity, this.state.playedOnly);
+    this.setState({maxTime: time, games: filteredGames});
+
+  },
+
+  // Forms the num players filter
+  formNumPlayersFilter: function() {
+    var options = [];
+    for (var i = 0; i <= 12; i++) {
+      var showVal = i == 0 ? "" : (i + "");
+      var opt = <option key={i} value={i}>{showVal}</option>;
+      options.push(opt);
+    }
+    return <div id="numPlayersFilter" key="playersDiv">
+        Num Players:
+        <select key="playersSelect" id="numPlayersSelect" onChange={this.handleNumPlayersFilterChange}>{options} </select>
+      </div>;
+  },
+
+  formChangeSortFn: function(sortFn) {
+    var self = this;
+    return function(e) {
+      self.setState({sortFn: sortFn,
+                     games: self.state.games.sort(sortFn)});
+    };
+  },
+
+  // Handle change num players filter - updates state.
+  handleNumPlayersFilterChange: function(e) {
+    var val = e.target.value;
+    if (!val) {
+      val = 0;
+    }
+    this.setState({ numPlayersFilterNum: val,
+                    games: this.filterGames(this.props.allGames, this.state.searchKeyword, val, this.state.maxTime, this.state.minComplexity, this.state.maxComplexity, this.state.playedOnly)});
+  },
+
+  // Filters out games that don't meet certain criteria (stored in state) and
+  // returns array of games that do match all the criteria.
+  filterGames: function(games, keyword, numPlayersFilterNum, maxTime, minComplex, maxComplex, playedOnly) {
+    var filtered = [];
+    // do this here so don't have to call toLowerCase for every game
+    if (keyword) {
+      keyword = keyword.toLowerCase();
+    }
+    if ((!numPlayersFilterNum) && ((!keyword) || keyword.length == 1) && !maxTime
+        && !minComplex && !maxComplex && !playedOnly)
+    {
+      return games;
+    }
+    for (var i = 0; i < games.length; i++) {
+      if (this.matchesFilters(games[i], keyword, numPlayersFilterNum, maxTime, minComplex, maxComplex, playedOnly)) {
+        filtered.push(games[i]);
+      }
+    }
+    return filtered;
+  },
+
+  // Returns true if the game matches all current filters, false otherwise.
+  matchesFilters: function(game, keyword, numPlayersFilter, maxTime, minComplex, maxComplex, playedOnly) {
+    if (keyword && keyword.length > 1) {
+      // if does not contain keyword, immediately return
+      if (!game.lowername.includes(keyword)) {
+        return false;
+      }
+    }
+
+    if (playedOnly && !(game.numPlays > 0)) {
+      return false;
+    }
+    if (numPlayersFilter > 0) {
+      var matchesPlayers =
+        game.minNumPlayers <= numPlayersFilter
+        && numPlayersFilter <= game.maxNumPlayers;
+      if (!matchesPlayers) {
+        return false;
+      }
+    }
+
+    if (maxTime && maxTime > 0) {
+      if (game.playTime > maxTime) {
+        return false;
+      }
+    }
+
+    // complexity
+    if (minComplex && minComplex > 0 && game.complexity < minComplex) {
+      return false;
+    }
+
+    if (maxComplex && maxComplex > 0 && game.complexity > maxComplex) {
+      return false;
+    }
+    
+    return true;
+
+  },
+
+  // Handler for input in the search text field.
+  searchKeyUp: function(e) {
+    var oldKey = this.state.searchKeyword;
+    var newKey = e.target.value;
+
+    var games = this.props.allGames;
+    if (oldKey && newKey) {
+      // only need to filter already filtered ones
+      if (newKey.startsWith(oldKey)) {
+        games = this.state.games;
+      }
+    }
+    games =
+       this.filterGames(
+         games, newKey,
+         this.state.numPlayersFilterNum,
+         this.state.maxTime,
+         this.state.minComplexity,
+         this.state.maxComplexity,
+         this.state.playedOnly);
+    this.setState({searchKeyword: e.target.value, games: games});
+    this.props.onSearchChange(newKey);
+  },
+});
+var ByDate = React.createClass({
+  render: function() {
+    var byDate = {};
+    // for each day in the week
+    for (var i = 0; i < 7; i += 1) {
+
+      var forDay = [];
+      var playObjArr = this.props.byDate[i];
+      // sort by date with most recent first
+      playObjArr = playObjArr.sort(function(a, b) {
+        return new Date(b["date"]) - new Date(a["date"]);
+      });
+      var prevDateStr = "";
+      for (var j = 0; j < playObjArr.length; j += 1) {
+        var name = this.findGameName(playObjArr[j]["bggId"]);
+
+        if (!this.matchesSearch(name, playObjArr[j])) {
+          continue;
+        }
+        var dateStr = playObjArr[j]["date"];
+        // if same date as before, don't show date
+        if (dateStr === prevDateStr) {
+          dateStr = "";
+        }
+        var notes = playObjArr[j]["notes"];
+        var show = 
+          <span key={dateStr + "" + j + "Plays"}>
+            <span className="play" key={dateStr}>{dateStr}</span>
+            <span className="gameName" key={name + dateStr} title={notes}> {name}</span>
+          </span>;
+        forDay.push(show);
+        forDay.push(<br key={"br" + dateStr + " " + j}/>);
+        prevDateStr = playObjArr[j]["date"]; // can't use dateStr since may be empty from above
+      }
+      byDate[i] = forDay;
+    }   
+    return  <div id="playsByDate" key="playsByDate">
+       <div id="mondays"><b>Monday</b><br/>{byDate[0]}</div>
+       <div id="fridays"><b>Friday</b><br/>{byDate[4]}</div>
+       <div id="saturdays"><b>Saturday</b><br/>{byDate[5]}</div>
+       <div id="sundays"><b>Sunday</b><br/>{byDate[6]}</div>
+       <div id="tuesdays"><b>Tuesday</b><br/>{byDate[1]}</div>
+       <div id="wednesdays"><b>Wednesday</b><br/>{byDate[2]}</div>
+       <div id="thursdays"><b>Thursday</b><br/>{byDate[3]}</div>
+      </div>;
+
+  },
+
+  // returns true if this play matches the search. True if play should be shown, false otherwise.
+  matchesSearch: function(name, playObj) {
+    if (!this.props.searchStr || this.props.searchStr.length <= 0) {
+      return true;
+    }
+
+    if (name && name.toLowerCase().includes(this.props.searchStr)) {
+      return true;
+    }
+    if (playObj["notes"] && playObj["notes"].toLowerCase().includes(this.props.searchStr)) {
+      return true;
+    }
+    return false;
+
+  },
+  // returns the name of the game with the given id
+  findGameName: function(id) {
+    var name = "";
+    for (var i = 0; i < this.props.allGames.length; i += 1) {
+      if (id == this.props.allGames[i].bggId) {
+        return this.props.allGames[i].name;
+      }
+    }
+
+    return name;
+  }
+});
+
+var HomeContainer = React.createClass({
+
+  getInitialState: function() {
+    return {searchStr: null};
+  },
+
+  render: function() {
+    return <div>
+      <div id="byDate">
+        <ByDate allGames={this.props.allGames} byDate={this.props.byDate} searchStr={this.state.searchStr} csrf={this.props.csrf}/>
+      </div>
+      <div id="allGames">
+        <Home allGames={this.props.allGames} onSearchChange={this.onSearchChange} csrf={this.props.csrf} key="homeGameList"/>
+      </div>
+    </div>
+  },
+
+  onSearchChange: function(keyword) {
+    if (keyword) {
+      keyword = keyword.toLowerCase();
+    }
+    this.setState({searchStr: keyword});
+  }
+
+});
+
+
+React.render(
+  <HomeContainer allGames={allGames} byDate={byDate} csrf={document.getElementsByName("csrfmiddlewaretoken")[0].value}/>, document.getElementById("home"));
+</script>
+</head>
+<body>
+{% csrf_token %} 
+<h1>Boardgames</h1>
+<div id="home"></div>
+<div id="home"></div>
+<div id="home"></div>
+<br/><br/><span>Data from www.boardgamegeek.com</span>
+</body>
+</html>
