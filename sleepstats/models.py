@@ -1,7 +1,7 @@
 from django.db import models
 
 class SleepInstance(models.Model):
-  starttime = models.DateTimeProperty(required=True)
-  endtime = models.DateTimeProperty(required=True)
-  minutes = models.IntegerProperty(required=True)
-  sleepQuality = models.IntegerProperty(required=True) 
+  starttime = models.DateTimeField(required=True)
+  endtime = models.DateTimeField(required=True)
+  minutes = models.IntegerField(required=True)
+  sleepQuality = models.IntegerField(required=True) 
