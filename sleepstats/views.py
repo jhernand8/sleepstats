@@ -37,7 +37,7 @@ def parseGroupType(groupTypeStr):
   return groupType;
 
 def home(request):
-  groupType = parseGroupType();
+  groupType = parseGroupType(request.GET.get('groupType'));
   dataByDate = getDataByDate(groupType);
   latestData = None
   mostRecentDate = None;
