@@ -118,7 +118,7 @@ def avgOverPeriod( dataByDate, periodFn):
   return summSleep / dayCount
 
 def getDataByDate( groupByType):
-  query = SleepInstance.all();
+  query = SleepInstance.objects.all();
   query.order("starttime");
   dateToData = {};
   sleepToDate = 0;
