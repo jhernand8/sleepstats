@@ -11,12 +11,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='SleepInstance',
+            name='Meal',
             fields=[
-                ('starttime', models.DateTimeField()),
-                ('endtime', models.DateTimeField()),
-                ('minutes', models.IntegerField()),
-                ('sleepQuality', models.IntegerField()),
+                ('date', models.DateField()),
+                ('meal', models.TextField()),
+                ('venue', models.TextField()),
+                ('yelpUrl', models.TextField()),
+                ('food', models.TextField()),
+                ('attendee', models.TextField()),
+                ('meal_id', models.AutoField(primary_key=True, serialize=False)),
             ],
         ),
     ]
