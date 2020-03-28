@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
     path('/', views.home),
-    path('/mail', views.handleMail),
+    path('mail', views.handleMail),
 ]
