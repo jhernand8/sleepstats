@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django import http
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
 import json
 from time import mktime
 from datetime import datetime
@@ -180,6 +181,7 @@ def getYearMid(origDate):
 
 
 # Handler for receiving email with csv attachment.
+@csrf_exempt
 def handleMail(request):
   outStr = ""
   for k, v in request.POST:
