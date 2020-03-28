@@ -177,3 +177,12 @@ def getMonthMid(origDate):
   return origDate.replace(day=15);
 def getYearMid(origDate):
   return origDate.replace(day=2).replace(month=7);
+
+
+# Handler for receiving email with csv attachment.
+def handleMail(request):
+  outStr = ""
+  for k, v in request.POST:
+    print("req: " + str(k) + "\n");
+    outStr += "req: " + str(k);
+  return http.HttpResponse(outStr)
