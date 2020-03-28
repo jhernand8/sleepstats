@@ -184,7 +184,7 @@ def getYearMid(origDate):
 @csrf_exempt
 def handleMail(request):
   outStr = ""
-  for k, v in request.POST:
+  for k in request.POST:
     print("req: " + str(k) + "\n");
     outStr += "req: " + str(k);
   return http.HttpResponse(outStr)
