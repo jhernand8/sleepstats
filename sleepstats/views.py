@@ -192,7 +192,7 @@ def handleMail(request):
     fileA = vf
     outStr += "files types: " + str(type(kf)) + " val: " + str(type(vf)) + "<br/>\n"
   
-  fileContent = fileA.read();
+  fileContent = str(fileA.read());
   outStr += "content: " + fileContent + "<br/>\n"
   lines = fileContent.split("\n")
 
