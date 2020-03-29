@@ -186,9 +186,16 @@ def handleMail(request):
   outStr = ""
   for k2, v in request.POST.items():
     outStr += str(k2) + ": " + str(v) + "<br/>\n"
+  fileA = ""
   for kf, vf in request.FILES.items():
     outStr += "files: " + str(kf) + ":" + str(vf) + "<br/>\n"
+    fileA = vf
+    outStr += "files types: " + str(type(kf)) + " val: " + str(type(vf)) + "<br/>\n"
 
+  att = request.FILES.get('attachments', "")
+  outStr += "att: " + str(att) + ": " + str(type(att)) + "<br/>\n"
+  
+  
   if 'attachments' in request.FILES:
     outStr += "has attachment" + str(request.FILES['attachments']) + "<br/>\n"
     outStr += "has attachment" + str(request.FILES['attachments'][0]) + "<br/>\n"
