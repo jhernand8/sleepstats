@@ -192,7 +192,9 @@ def handleMail(request):
       #print("k:" + str(k) + ":" + str(request.POST[k]) + "<br/>\n");
     outStr += "req: " + str(k);
   for k2, v in request.POST.items():
-    outStr += str(k) + ": " + str(v) + "<br/>/n"
+    outStr += str(k2) + ": " + str(v) + "<br/>\n"
+  for kf, vf in request.FILES.items():
+    outStr += "files: " + str(kf) + ":" + str(vf) + "<br/>\n"
 
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
