@@ -204,9 +204,7 @@ def handleMail(request):
 def handleFile(lines):
   # find most recent entry in db so we can ignore
   # all data that is older than it in the email
-  query = SleepInstance.objects.all();
-  query.order_by("-starttime");
-  newestentry = query.get();
+  query = SleepInstance.objects.all().order_by("-starttime");
   isFirst = True;
   for line in lines:
     if isFirst:
