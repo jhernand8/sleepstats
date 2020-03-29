@@ -15,7 +15,7 @@ import time
 from json import JSONEncoder
 from sleepstats.models import SleepInstance
 
-#DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights'], verbose=True);
+DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights'], verbose=True);
 AvgsForPrevDays = [1, 7, 14, 21, 30, 60, 90, 180, 365, 730];
 class GroupByType:
   DAY = 1
@@ -188,3 +188,22 @@ def handleMail(request):
     print("req: " + str(k) + "\n");
     outStr += "req: " + str(k);
   return http.HttpResponse(outStr)
+
+def parseIntoSleepInstance(line):
+  data = line.split(";");
+  timeFormat = "%Y-%m-%d %H:%M:%S";
+  startt = time.strptime(data[0], timeFormat);
+  endt = time.strptime(data[1], timeFormat);
+
+  startdt = datetime.fromtimestamp(mktime(startt));
+  enddt = datetime.fromtimestamp(mktime(endt));
+
+  duration = enddt - startdt;
+  mins = int(duration.seconds / 60);
+
+  squality = data[2][:-1];
+  sleepinst = SleepInstance(starttime=startdt,
+                            endtime = enddt,
+                            minutes = mins,
+                            sleepQuality = int(squality));
+  return sleepinst;
