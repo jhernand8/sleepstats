@@ -195,17 +195,10 @@ def handleMail(request):
   fileContent = str(fileA.read());
   outStr += "content: " + fileContent + "<br/>\n"
   lines = fileContent.split("\n")
+  handleFile(lines);
 
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
-# contents = "";
-#   msgbody = msg.bodies('text/plain');
-#   if hasattr(msg, 'attachments'):
-#     contents = msg.attachments[0][1].decode();
-#   else:
-#     for header, body in msgbody:
-#       contents = body.decode();
-#   lines = contents.split("\n");
 
 # Takes in a file as list of lines, parses it, creates sleep instances
 def handleFile(lines):
