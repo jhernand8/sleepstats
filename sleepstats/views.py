@@ -187,9 +187,9 @@ def handleMail(request):
   for k in request.POST:
     print("req: " + str(k) + "\n<br/>");
     if (k == 'attachment_details'):
-      print("attachementdetails:" + str(request.POST[k] + "<br/>\n");
+      print("attachementdetails:" + str(request.POST[k]) + "<br/>\n");
     if (str(k).startsWith("attachment")):
-      print("k:" + str(k) + ":" + str(request.POST[k] + "<br/>\n");
+      print("k:" + str(k) + ":" + str(request.POST[k]) + "<br/>\n");
     outStr += "req: " + str(k);
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
