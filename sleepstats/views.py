@@ -184,18 +184,14 @@ def getYearMid(origDate):
 @csrf_exempt
 def handleMail(request):
   outStr = ""
-  for k in request.POST:
-    print("req: " + str(k) + "\n<br/>");
-    if (k == 'attachment_details'):
-      outStr += "attachementdetails:" + str(request.POST[k]) + "<br/>\n";
-    #if (str(k).startsWith("attachment")):
-      #print("k:" + str(k) + ":" + str(request.POST[k]) + "<br/>\n");
-    outStr += "req: " + str(k);
   for k2, v in request.POST.items():
     outStr += str(k2) + ": " + str(v) + "<br/>\n"
   for kf, vf in request.FILES.items():
     outStr += "files: " + str(kf) + ":" + str(vf) + "<br/>\n"
 
+  if request.FILES['attachment']:
+    outStr += "has attachment" + str(request.FILES['attachment']) + "<br/>\n"
+    outStr += "has attachment" + str(request.FILES['attachment'][0]) + "<br/>\n"
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
 # contents = "";
