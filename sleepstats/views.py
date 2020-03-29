@@ -187,7 +187,36 @@ def handleMail(request):
   for k in request.POST:
     print("req: " + str(k) + "\n");
     outStr += "req: " + str(k);
-  return http.HttpResponse(outStr)
+  #return http.HttpResponse(outStr)
+  return http.HttpResponseNotFound(outStr)
+# contents = "";
+#   msgbody = msg.bodies('text/plain');
+#   if hasattr(msg, 'attachments'):
+#     contents = msg.attachments[0][1].decode();
+#   else:
+#     for header, body in msgbody:
+#       contents = body.decode();
+#   lines = contents.split("\n");
+
+# Takes in a file as list of lines, parses it, creates sleep instances
+def handleFile(lines):
+  # find most recent entry in db so we can ignore
+  # all data that is older than it in the email
+  query = SleepInstance.all();
+  query.order("-starttime");
+  newestentry = query.get();
+  isFirst = True;
+  for line in lines:
+    if isFirst:
+      isFirst = False;
+      continue;
+    if not line:
+      continue;
+    sleepObj = parseIntoSleepInstance(line);
+    # only add newer entries
+    if (not newestentry) or sleepObj.starttime > newestentry.starttime:
+      sleepObj.put();
+
 
 def parseIntoSleepInstance(line):
   data = line.split(";");
