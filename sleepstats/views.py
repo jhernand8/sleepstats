@@ -189,9 +189,9 @@ def handleMail(request):
   for kf, vf in request.FILES.items():
     outStr += "files: " + str(kf) + ":" + str(vf) + "<br/>\n"
 
-  if request.FILES['attachment']:
-    outStr += "has attachment" + str(request.FILES['attachment']) + "<br/>\n"
-    outStr += "has attachment" + str(request.FILES['attachment'][0]) + "<br/>\n"
+  if 'attachments' in request.FILES:
+    outStr += "has attachment" + str(request.FILES['attachments']) + "<br/>\n"
+    outStr += "has attachment" + str(request.FILES['attachments'][0]) + "<br/>\n"
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
 # contents = "";
