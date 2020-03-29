@@ -195,6 +195,9 @@ def handleMail(request):
   att = request.FILES.get('attachments', "")
   outStr += "att: " + str(att) + ": " + str(type(att)) + "<br/>\n"
   
+  attachList = request.FILES.getlist("attachments");
+  for f in attachList:
+    outStr += "attachlist: " + str(f) + "<br/>\n"
   
   if 'attachments' in request.FILES:
     outStr += "has attachment" + str(request.FILES['attachments']) + "<br/>\n"
