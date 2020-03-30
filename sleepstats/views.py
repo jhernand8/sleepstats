@@ -50,19 +50,22 @@ def home(request):
       mostRecentDate = dataDate
       latestData = dataByDate[dataDate]
   avgOverPeriods = computeSummData()
-  templateValues = {
-      'test': "test aldsjasldj",
-      'dateData': dataByDate,
-      'currentDebt': latestData.sleepDebtToDate,
-      'fullByDay': (60*8),
-      'fullByWeek': (60*8*7),
-      'sevenByDay': (60*7),
-      'sevenByWeek': (60*7*7),
-      'summData': avgOverPeriods,
-      'summKeys': sorted(avgOverPeriods.keys()),
-      'dateKeys': sorted(dataByDate.keys()),
-      'isIndivDay': (groupType == GroupByType.DAY)}
-  return render(request, 'sleepDataTemplate.html', templateValues);
+
+  outStr = "a: " + str(avgOverPeriods.keys());
+  return http.HttpResponseNotFound(outStr)
+  #templateValues = {
+  #    'test': "test aldsjasldj",
+  #    'dateData': dataByDate,
+  #    'currentDebt': latestData.sleepDebtToDate,
+  #    'fullByDay': (60*8),
+  #    'fullByWeek': (60*8*7),
+  #    'sevenByDay': (60*7),
+  #    'sevenByWeek': (60*7*7),
+  #    'summData': avgOverPeriods,
+  #    'summKeys': sorted(avgOverPeriods.keys()),
+  #    'dateKeys': sorted(dataByDate.keys()),
+  #    'isIndivDay': (groupType == GroupByType.DAY)}
+  #return render(request, 'sleepDataTemplate.html', templateValues);
 
 
 # Computes some summary data such as average sleep over different periods
@@ -191,25 +194,13 @@ def handleMail(request):
     fileA = vf
   
   fileContent = str(fileA.read());
-  outStr += "file: " + str(len(fileContent)) + ": " + str(type(fileContent)) + "\n<br/>"
   lines = fileContent.splitlines()
   if len(lines) < 2:
     lines = fileContent.split("\\n")
-  lines2 = fileContent.split("\r")
-  if "\n" in fileContent:
-    outStr += " newline in filecontent \n<br/>"
-  if "\r" in fileContent:
-    outStr += " rnewline in filecontent \n<br/>"
-  if "\\n" in fileContent:
-    outStr += "literal bn in filecontent \n<br/>"
-  if "\\r" in fileContent:
-    outStr += "literal brn in filecontent \n<br/>"
   outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
-  outStr += "len: " + str(len(lines[0])) + ": " + str(len(lines2[0])) + ":\n<br/>"
   outStr += handleFile(lines);
 
-  #return http.HttpResponse(outStr)
-  return http.HttpResponseNotFound(outStr)
+  return http.HttpResponse(outStr)
 
 # Takes in a file as list of lines, parses it, creates sleep instances
 def handleFile(lines):
@@ -218,14 +209,12 @@ def handleFile(lines):
   query = SleepInstance.objects.all().order_by("-starttime");
   newestentry = query.first()
   isFirst = True;
-  outStr = "q: " + str(newestentry) + "\n<br/>";
   for line in lines:
     if isFirst:
       isFirst = False;
       continue;
     if not line:
       continue;
-    outStr += "LL: " + str(line) + "\n<br/>";
     sleepObj = parseIntoSleepInstance(line);
     # only add newer entries
     if (not newestentry) or sleepObj.starttime > newestentry.starttime:
