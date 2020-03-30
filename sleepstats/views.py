@@ -192,7 +192,8 @@ def handleMail(request):
   
   fileContent = str(fileA.read());
   lines = fileContent.split("\n")
-  outStr += str(type(lines)) + ": " + str(len(lines)) + "\n<br/>"
+  lines2 = fileContent.split("\r")
+  outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
   outStr += handleFile(lines);
 
   #return http.HttpResponse(outStr)
