@@ -188,13 +188,11 @@ def handleMail(request):
     outStr += str(k2) + ": " + str(v) + "<br/>\n"
   fileA = ""
   for kf, vf in request.FILES.items():
-    outStr += "files: " + str(kf) + ":" + str(vf) + "<br/>\n"
     fileA = vf
-    outStr += "files types: " + str(type(kf)) + " val: " + str(type(vf)) + "<br/>\n"
   
   fileContent = str(fileA.read());
-  outStr += "content: " + fileContent + "<br/>\n"
   lines = fileContent.split("\n")
+  outStr += str(type(lines)) + ": " + str(lines) + "\n<br/>"
   outStr += handleFile(lines);
 
   #return http.HttpResponse(outStr)
@@ -209,6 +207,7 @@ def handleFile(lines):
   isFirst = True;
   outStr = "q: " + str(newestentry) + "\n<br/>";
   for line in lines:
+    outStr += "LL: " + str(line) + "\n<br/>";
     if isFirst:
       isFirst = False;
       continue;
