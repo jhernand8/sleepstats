@@ -51,21 +51,19 @@ def home(request):
       latestData = dataByDate[dataDate]
   avgOverPeriods = computeSummData()
 
-  outStr = "a: " + str(avgOverPeriods.keys());
-  return http.HttpResponseNotFound(outStr)
-  #templateValues = {
-  #    'test': "test aldsjasldj",
-  #    'dateData': dataByDate,
-  #    'currentDebt': latestData.sleepDebtToDate,
-  #    'fullByDay': (60*8),
-  #    'fullByWeek': (60*8*7),
-  #    'sevenByDay': (60*7),
-  #    'sevenByWeek': (60*7*7),
-  #    'summData': avgOverPeriods,
-  #    'summKeys': sorted(avgOverPeriods.keys()),
-  #    'dateKeys': sorted(dataByDate.keys()),
-  #    'isIndivDay': (groupType == GroupByType.DAY)}
-  #return render(request, 'sleepDataTemplate.html', templateValues);
+  templateValues = {
+      'test': "test aldsjasldj",
+      'dateData': dataByDate,
+      'currentDebt': latestData.sleepDebtToDate,
+      'fullByDay': (60*8),
+      'fullByWeek': (60*8*7),
+      'sevenByDay': (60*7),
+      'sevenByWeek': (60*7*7),
+      'summData': avgOverPeriods,
+      'summKeys': sorted(avgOverPeriods.keys()),
+      'dateKeys': sorted(dataByDate.keys()),
+      'isIndivDay': (groupType == GroupByType.DAY)}
+  return render(request, 'sleepDataTemplate.html', templateValues);
 
 
 # Computes some summary data such as average sleep over different periods
@@ -82,7 +80,7 @@ def computeSummData():
     dataForDay = dataByDate[currDay]
     summSleep += dataForDay.minutes
     if dayCount in AvgsForPrevDays or dayCount == numDays:
-      avgData[dayCount] = int(summSleep / dayCount)
+      avgData[str(dayCount)] = int(summSleep / dayCount)
       if dayCount == numDays:
         avgData["AVG"] = int(summSleep/dayCount)
   
