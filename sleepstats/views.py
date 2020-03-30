@@ -191,7 +191,7 @@ def handleMail(request):
     fileA = vf
   
   fileContent = str(fileA.read());
-  lines = fileContent.split("\n")
+  lines = fileContent.splitlines()
   lines2 = fileContent.split("\r")
   outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
   outStr += handleFile(lines);
