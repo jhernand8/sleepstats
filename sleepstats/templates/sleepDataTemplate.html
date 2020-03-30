@@ -60,26 +60,26 @@
   <tr class="current">
     <td>Current</td>
     <td 
-      >{{summData['currWeek']}}</td>
+      >{{summData.currWeek}}</td>
     <td 
-      >{{summData['currMonth']}}</td>
+      >{{summData.currMonth}}</td>
     <td
-     >{{summData['currYear']}}</td>
+     >{{summData.currYear}}</td>
   </tr>
   <tr class="previous">
     <td>Previous</td>
     <td 
-      >{{summData['prevWeek']}}</td>
+      >{{summData.prevWeek}}</td>
     <td 
-      >{{summData['prevMonth']}}</td>
+      >{{summData.prevMonth}}</td>
     <td 
-      >{{summData['prevYear']}}</td>
+      >{{summData.prevYear}}</td>
   </tr>
 </table>
 <br/><br/>
 <table id="avgSleepInPastNumDays">
 {% for sKey in summKeys %}
-  {% if sKey in ['currMonth', 'currWeek', 'currYear', 'prevMonth', 'prevWeek', 'prevYear', 'avg', 'minToNext'] %}
+  {% if sKey in ["currMonth", "currWeek", "currYear", "prevMonth", "prevWeek", "prevYear", "avg", "minToNext"] %}
   {% else %}
   <tr><td class="numDaysTd">{{sKey}}</td>
     <td class="avgSleepTd {% if summData["AVG"] < summData[sKey] %} aboveAvgTd {% elif summData["AVG"] > summData[sKey] %} belowAvgTd {% endif %} ">
@@ -88,7 +88,7 @@
   {%endif%}
 {% endfor %}
 </table>
-Avg: {{summData['avg']}}<br/>
+Avg: {{summData.avg}}<br/>
 Extra minutes to +1 avg: {{summData["minToNext"]}}<br/>
 <br/>
 <br/>
