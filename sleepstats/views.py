@@ -191,9 +191,11 @@ def handleMail(request):
     fileA = vf
   
   fileContent = str(fileA.read());
+  outStr += "file: " + str(len(fileContent)) + ": " + str(type(fileContent)) + "\n<br/>"
   lines = fileContent.splitlines()
   lines2 = fileContent.split("\r")
   outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
+  outStr += "len: " + str(len(lines[0])) + ": " + str(len(lines2[0])) + ":\n<br/>"
   outStr += handleFile(lines);
 
   #return http.HttpResponse(outStr)
