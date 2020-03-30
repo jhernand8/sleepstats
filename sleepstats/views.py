@@ -192,7 +192,7 @@ def handleMail(request):
   
   fileContent = str(fileA.read());
   lines = fileContent.split("\n")
-  outStr += str(type(lines)) + ": " + str(lines) + "\n<br/>"
+  outStr += str(type(lines)) + ": " + str(len(lines)) + "\n<br/>"
   outStr += handleFile(lines);
 
   #return http.HttpResponse(outStr)
@@ -207,13 +207,12 @@ def handleFile(lines):
   isFirst = True;
   outStr = "q: " + str(newestentry) + "\n<br/>";
   for line in lines:
-    outStr += "LL: " + str(line) + "\n<br/>";
     if isFirst:
       isFirst = False;
       continue;
     if not line:
       continue;
-    outStr += line + "\n<br/>";
+    outStr += "LL: " + str(line) + "\n<br/>";
     sleepObj = parseIntoSleepInstance(line);
     # only add newer entries
     if (not newestentry) or sleepObj.starttime > newestentry.starttime:
