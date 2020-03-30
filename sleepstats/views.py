@@ -194,6 +194,14 @@ def handleMail(request):
   outStr += "file: " + str(len(fileContent)) + ": " + str(type(fileContent)) + "\n<br/>"
   lines = fileContent.splitlines()
   lines2 = fileContent.split("\r")
+  if "\n" in fileContent:
+    outStr += " newline in filecontent \n<br/>"
+  if "\r" in fileContent:
+    outStr += " rnewline in filecontent \n<br/>"
+  if "\\n" in fileContent:
+    outStr += "literal bn in filecontent \n<br/>"
+  if "\\r" in fileContent:
+    outStr += "literal brn in filecontent \n<br/>"
   outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
   outStr += "len: " + str(len(lines[0])) + ": " + str(len(lines2[0])) + ":\n<br/>"
   outStr += handleFile(lines);
