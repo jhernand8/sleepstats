@@ -193,6 +193,8 @@ def handleMail(request):
   fileContent = str(fileA.read());
   outStr += "file: " + str(len(fileContent)) + ": " + str(type(fileContent)) + "\n<br/>"
   lines = fileContent.splitlines()
+  if len(lines) < 2:
+    lines = fileContent.split("\\n")
   lines2 = fileContent.split("\r")
   if "\n" in fileContent:
     outStr += " newline in filecontent \n<br/>"
