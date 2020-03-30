@@ -195,7 +195,7 @@ def handleMail(request):
   fileContent = str(fileA.read());
   outStr += "content: " + fileContent + "<br/>\n"
   lines = fileContent.split("\n")
-  handleFile(lines);
+  outStr += handleFile(lines);
 
   #return http.HttpResponse(outStr)
   return http.HttpResponseNotFound(outStr)
@@ -205,17 +205,21 @@ def handleFile(lines):
   # find most recent entry in db so we can ignore
   # all data that is older than it in the email
   query = SleepInstance.objects.all().order_by("-starttime");
+  newestentry = query.first()
   isFirst = True;
+  outStr = "q: " + str(newestentry) + "\n<br/>";
   for line in lines:
     if isFirst:
       isFirst = False;
       continue;
     if not line:
       continue;
+    outStr += line + "\n<br/>";
     sleepObj = parseIntoSleepInstance(line);
     # only add newer entries
     if (not newestentry) or sleepObj.starttime > newestentry.starttime:
       sleepObj.save();
+  return outStr;
 
 
 def parseIntoSleepInstance(line):
