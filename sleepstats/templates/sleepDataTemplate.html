@@ -78,18 +78,8 @@
 </table>
 <br/><br/>
 <table id="avgSleepInPastNumDays">
-{% for sKey in summKeys %}
-  {% if sKey in ["currMonth", "currWeek", "currYear", "prevMonth", "prevWeek", "prevYear", "avg", "minToNext"] %}
-  {% else %}
-  <tr><td class="numDaysTd">{{sKey}}</td>
-    <td class="avgSleepTd {% if summData["AVG"] < summData[sKey] %} aboveAvgTd {% elif summData["AVG"] > summData[sKey] %} belowAvgTd {% endif %} ">
-    {{summData[sKey]}}</td>
-  </tr>
-  {%endif%}
-{% endfor %}
 </table>
 Avg: {{summData.avg}}<br/>
-Extra minutes to +1 avg: {{summData["minToNext"]}}<br/>
 <br/>
 <br/>
 <h3>Sleep time </h3>
