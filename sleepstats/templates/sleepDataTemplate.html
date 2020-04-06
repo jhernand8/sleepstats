@@ -41,7 +41,7 @@
 
 </style>
 </head>
-<script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
 
 <body>
 <h3>Overview</h3>
@@ -90,6 +90,33 @@ Avg: {{summData.avg}}<br/>
 
 <div id="sumSleepDebt"></div>
 
+
+<script type="text/javascript">
+var sleepChart = echarts.init(document.getElementById('sleepByDay'));
+
+var dateArr = ['4/2/2020'];
+var sleepByDateArr= [450];
+var option = {
+  title: { 
+    text: 'Sleep over time'
+  },
+  data: {},
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    data: dateArr
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [{
+    type: 'line',
+    data: sleepByDateArr
+  }]
+};
+
+sleepChart.setOption(option);
+</script>
 </body>
 <script>
 
