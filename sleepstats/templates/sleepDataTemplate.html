@@ -94,7 +94,10 @@ Avg: {{summData.avg}}<br/>
 <script type="text/javascript">
 var sleepChart = echarts.init(document.getElementById('sleepByDay'));
 
-var dateArr = {{ dateKeys|date:'Y-m-d' }};
+var dateArr = [
+  {% for d in dateKeys %}
+    '{{ d|date:'Y-m-d' }}',
+  {% endfor %}];
 var sleepByDateArr= [450];
 var option = {
   title: { 
