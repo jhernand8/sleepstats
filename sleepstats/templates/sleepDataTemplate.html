@@ -98,7 +98,11 @@ var dateArr = [
   {% for d in dateKeys %}
     '{{ d|date:'Y-m-d' }}',
   {% endfor %}];
-var sleepByDateArr= [450];
+var sleepByDateArr= [
+  {% for d in dateKeys %}
+    {{ dateDate[d] }},
+  {% endfor %}
+];
 var option = {
   title: { 
     text: 'Sleep over time'
