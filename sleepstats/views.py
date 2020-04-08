@@ -14,6 +14,7 @@ from collections import namedtuple
 import time
 from json import JSONEncoder
 from sleepstats.models import SleepInstance
+import pytz
 
 DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights'], verbose=True);
 AvgsForPrevDays = [1, 7, 14, 21, 30, 60, 90, 180, 365, 730];
@@ -222,7 +223,9 @@ def handleFile(lines):
       continue;
     sleepObj = parseIntoSleepInstance(line);
     # only add newer entries
-    if (not newestentry) or sleepObj.starttime > newestentry.starttime:
+    if (not newestentry):
+      sleepObj.save();
+    elif sleepObj.starttime.replace(tzinfo=pytz.UTC) > newestentry.starttime.replace(tzinfo=pytz.UTC):
       sleepObj.save();
   return outStr;
 
