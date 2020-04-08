@@ -98,8 +98,8 @@ var dateArr = [
   {% for d in dateKeys %}
     '{{ d|date:'Y-m-d' }}',
   {% endfor %}];
-var sleepByDateArr= [
-];
+var sleepByDateArr= {{ minsForDate }};
+var sleepDebtForDates = {{ sleepDebtForDates }};
 var option = {
   title: { 
     text: 'Sleep over time'
