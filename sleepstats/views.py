@@ -51,15 +51,17 @@ def home(request):
       latestData = dataByDate[dataDate]
   avgOverPeriods = computeSummData()
 
+  
+
   templateValues = {
-      'test': "test aldsjasldj",
-      'dateData': dataByDate,
-      'currentDebt': latestData.sleepDebtToDate,
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
       'sevenByDay': (60*7),
       'sevenByWeek': (60*7*7),
       'summData': avgOverPeriods,
+      'currentDebt': latestData.sleepDebtToDate,
+      
+      'dateData': dataByDate,
       'summKeys': sorted(avgOverPeriods.keys()),
       'dateKeys': sorted(dataByDate.keys()),
       'isIndivDay': (groupType == GroupByType.DAY)}
@@ -195,7 +197,7 @@ def handleMail(request):
   lines = fileContent.splitlines()
   if len(lines) < 2:
     lines = fileContent.split("\\n")
-  outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines2)) + "\n<br/>"
+  outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines)) + "\n<br/>"
   outStr += handleFile(lines);
 
   return http.HttpResponse(outStr)
