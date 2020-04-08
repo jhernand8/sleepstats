@@ -51,8 +51,11 @@ def home(request):
       latestData = dataByDate[dataDate]
   avgOverPeriods = computeSummData()
 
-  
-
+  minsForDates = []
+  sleepDebtToDate = []
+  for dateKey in sorted(dataByDate.keys()):
+    minsForDates.append(dataByDate[dateKey].minutes
+    sleepDebtToDate.append(dataByDate[dateKey].sleepDebtToDate
   templateValues = {
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
@@ -60,6 +63,8 @@ def home(request):
       'sevenByWeek': (60*7*7),
       'summData': avgOverPeriods,
       'currentDebt': latestData.sleepDebtToDate,
+      'minsForDates': minsForDates,
+      'sleepDebtForDates': sleepDebtToDate,
       
       'dateData': dataByDate,
       'summKeys': sorted(avgOverPeriods.keys()),
