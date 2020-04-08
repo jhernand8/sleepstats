@@ -54,8 +54,8 @@ def home(request):
   minsForDates = []
   sleepDebtToDate = []
   for dateKey in sorted(dataByDate.keys()):
-    minsForDates.append(dataByDate[dateKey].minutes
-    sleepDebtToDate.append(dataByDate[dateKey].sleepDebtToDate
+    minsForDates.append(dataByDate[dateKey].minutes)
+    sleepDebtToDate.append(dataByDate[dateKey].sleepDebtToDate)
   templateValues = {
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
