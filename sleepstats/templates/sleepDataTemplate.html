@@ -98,7 +98,7 @@ var dateArr = [
   {% for d in dateKeys %}
     '{{ d|date:'Y-m-d' }}',
   {% endfor %}];
-var sleepByDateArr= {{ minsForDate }};
+var sleepByDateArr= {{ minsForDates }};
 var sleepDebtForDates = {{ sleepDebtForDates }};
 var option = {
   title: { 
