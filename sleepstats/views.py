@@ -218,7 +218,7 @@ def handleMail(request):
     lines = fileContent.split("\\n")
   handleFile(lines);
 
-  return http.HttpResponse(outStr)
+  return http.HttpResponse("")
 
 # Takes in a file as list of lines, parses it, creates sleep instances
 def handleFile(lines):
@@ -241,7 +241,6 @@ def handleFile(lines):
       sleepObj.save();
     elif sleepObj.starttime.replace(tzinfo=pytz.UTC) > newestentry.starttime.replace(tzinfo=pytz.UTC):
       sleepObj.save();
-  return outStr;
 
 
 def parseIntoSleepInstance(line):
