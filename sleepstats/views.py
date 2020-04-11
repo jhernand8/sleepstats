@@ -58,11 +58,12 @@ def home(request):
   for dateKey in sorted(dataByDate.keys()):
     if groupType == GroupByType.DAY:
       minsForDates.append(dataByDate[dateKey].minutes)
+      avgForDates.append(dataByDate[dateKey].avgToDate)
     else:
       minsForDates.append(dataByDate[dateKey].avgForGroup)
+      avgForDates.append(dataByDate[dateKey].avgToDate/dataByDate[dateKey].numNights)
 
     sleepDebtToDate.append(dataByDate[dateKey].sleepDebtToDate)
-    avgForDates.append(dataByDate[dateKey].avgToDate)
   templateValues = {
       'fullByDay': (60*8),
       'fullByWeek': (60*8*7),
