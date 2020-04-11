@@ -56,7 +56,11 @@ def home(request):
   sleepDebtToDate = []
   avgForDates = []
   for dateKey in sorted(dataByDate.keys()):
-    minsForDates.append(dataByDate[dateKey].minutes)
+    if groupType == GroupByType.DAY:
+      minsForDates.append(dataByDate[dateKey].minutes)
+    else:
+      minsForDates.append(dataByDate[dateKey].avgForGroup)
+
     sleepDebtToDate.append(dataByDate[dateKey].sleepDebtToDate)
     avgForDates.append(dataByDate[dateKey].avgToDate)
   templateValues = {
@@ -69,11 +73,10 @@ def home(request):
       'minsForDates': minsForDates,
       'sleepDebtForDates': sleepDebtToDate,
       'avgForDates': avgForDates,
-      
-      'dateData': dataByDate,
-      'summKeys': sorted(avgOverPeriods.keys()),
       'dateKeys': sorted(dataByDate.keys()),
-      'isIndivDay': (groupType == GroupByType.DAY)}
+      
+      'summKeys': sorted(avgOverPeriods.keys()),
+      }
   return render(request, 'sleepDataTemplate.html', templateValues);
 
 
