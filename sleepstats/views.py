@@ -227,11 +227,13 @@ def handleFile(lines):
   query = SleepInstance.objects.all().order_by("-starttime");
   newestentry = query.first()
   isFirst = True;
+  lineIndex = 0;
   for line in lines:
+    lineIndex += 1;
     if isFirst:
       isFirst = False;
       continue;
-    if not line:
+    if not line or len(line) < 5 or len(lines) == lineIndex:
       continue;
     sleepObj = parseIntoSleepInstance(line);
     # only add newer entries
