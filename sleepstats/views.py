@@ -196,8 +196,18 @@ def getYearMid(origDate):
 @csrf_exempt
 def handleMail(request):
   outStr = ""
+  fromStr = "";
   for k2, v in request.POST.items():
+    if "from" in str(k2).lower():
+      fromStr = v;
+      break;
     outStr += str(k2) + ": " + str(v) + "<br/>\n"
+
+  if "n@gmail.com" not in fromStr.lower():
+    return;
+  if "jb" not in fromStr.lower():
+    return;
+
   fileA = ""
   for kf, vf in request.FILES.items():
     fileA = vf
@@ -206,8 +216,7 @@ def handleMail(request):
   lines = fileContent.splitlines()
   if len(lines) < 2:
     lines = fileContent.split("\\n")
-  outStr += str(type(lines)) + ": " + str(len(lines)) + ": " + str(len(lines)) + "\n<br/>"
-  outStr += handleFile(lines);
+  handleFile(lines);
 
   return http.HttpResponse(outStr)
 
