@@ -119,16 +119,22 @@ var option = {
     type: 'category',
     data: dateArr
   },
-  yAxis: {
-    type: 'value'
-  },
+  yAxis: [
+    {
+      type: 'value'
+    },
+    {
+      type: 'value'
+    }
+  ],
   series: [{
     type: 'line',
     data: sleepByDateArr,
     lineStyle: {
       width: 2,
       color: 'green'
-    }
+    },
+    yAxisIndex: 0
   },
   {
     type: 'line',
@@ -136,7 +142,8 @@ var option = {
     lineStyle: {
       width: 2,
       color: 'black'
-    }
+    },
+    yAxisIndex: 0
   },
   {
     type: 'line',
@@ -144,7 +151,8 @@ var option = {
     lineStyle: {
       width: 1,
       color: 'red'
-    }
+    },
+    yAxisIndex: 0
   },
   {
     type: 'line',
@@ -152,7 +160,17 @@ var option = {
     lineStyle: {
       width: 1,
       color: 'blue'
-    }
+    },
+    yAxisIndex: 0
+  },
+  {
+    type: 'line',
+    data: sleepDebtForDates,
+    lineStyle: {
+      width: 2,
+      color: 'black'
+    },
+    yAxisIndex: 1
   }
 ]
 };
