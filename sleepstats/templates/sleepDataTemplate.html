@@ -98,6 +98,14 @@ var dateArr = [
   {% for d in dateKeys %}
     '{{ d|date:'Y-m-d' }}',
   {% endfor %}];
+var eighthrArr = [
+  {% for d in dateKeys %}
+    480,
+  {% endfor %}];
+var sevenhrArr = [
+  {% for d in dateKeys %}
+    420,
+  {% endfor %}];
 var sleepByDateArr= {{ minsForDates }};
 var sleepDebtForDates = {{ sleepDebtForDates }};
 var avgForDates = {{ avgForDates }};
@@ -121,7 +129,16 @@ var option = {
   {
     type: 'line',
     data: avgForDates
-  }]
+  },
+  {
+    type: 'line',
+    data: sevenhrArr
+  },
+  {
+    type: 'line',
+    data: eighthrArr
+  }
+]
 };
 
 sleepChart.setOption(option);

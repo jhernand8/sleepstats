@@ -128,7 +128,7 @@ def avgOverPeriod( dataByDate, periodFn):
       summSleep += dataByDate[day].minutes
   if summSleep == 0:
     return 0
-  return summSleep / dayCount
+  return int(summSleep / dayCount)
 
 def getDataByDate( groupByType):
   allSleep = SleepInstance.objects.order_by("starttime").all();
