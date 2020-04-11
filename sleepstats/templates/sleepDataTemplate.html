@@ -124,19 +124,35 @@ var option = {
   },
   series: [{
     type: 'line',
-    data: sleepByDateArr
+    data: sleepByDateArr,
+    lineStyle: {
+      width: 2,
+      color: 'green'
+    }
   },
   {
     type: 'line',
-    data: avgForDates
+    data: avgForDates,
+    lineStyle: {
+      width: 2,
+      color: 'black'
+    }
   },
   {
     type: 'line',
-    data: sevenhrArr
+    data: sevenhrArr,
+    lineStyle: {
+      width: 1,
+      color: 'red'
+    }
   },
   {
     type: 'line',
-    data: eighthrArr
+    data: eighthrArr,
+    lineStyle: {
+      width: 1,
+      color: 'blue'
+    }
   }
 ]
 };
