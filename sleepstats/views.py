@@ -16,7 +16,7 @@ from json import JSONEncoder
 from sleepstats.models import SleepInstance
 import pytz
 
-DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights'], verbose=True);
+DataForDate = namedtuple('DataForDate', ['date', 'minutes', 'avgToDate', 'sleepDebtToDate', 'avgForGroup', 'groupAvgToDate', 'numNights']);
 AvgsForPrevDays = [1, 7, 14, 21, 30, 60, 90, 180, 365, 730];
 class GroupByType:
   DAY = 1
